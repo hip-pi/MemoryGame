@@ -74,7 +74,7 @@ public class GameScreenActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private class GameLogic extends AsyncTask<Void, Void, Void> {
+    private class GameLogic extends AsyncTask<Void, Integer, Void> {
 
         private boolean isRed = false;
         private int currentButton = 0;
@@ -89,28 +89,24 @@ public class GameScreenActivity extends AppCompatActivity implements View.OnClic
 
             for (int i = 0; i < buttonList.size(); i++) {
                 currentButton = buttonList.get(i);
-                isRed = true;
-                publishProgress();
-                try {
-                    Thread.sleep(delayValue);
-                } catch (InterruptedException e) {
-                    finish();
-                }
-                isRed = false;
-                publishProgress();
-                try {
-                    Thread.sleep(delayValue);
-                } catch (InterruptedException e) {
-                    finish();
+                for (int j = 0; j < 2; j++) {
+                    isRed = !isRed;
+                    publishProgress(currentButton);
+                    try {
+                        Thread.sleep(delayValue);
+                    } catch (InterruptedException e) {
+                        finish();
+                    }
                 }
             }
             return null;
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {
+        protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            Button temp = findViewById(button_ids[currentButton-1]);
+
+            Button temp = findViewById(button_ids[values[0]-1]);
             if (isRed) {
                 temp.setBackgroundColor(getResources().getColor(R.color.gameRed, null));
             } else {
